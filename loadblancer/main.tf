@@ -101,7 +101,7 @@ resource "aws_lb_target_group" "targetgroup-nlb" {
 
 
 
-resource "aws_alb_listener" "nlb-listener" {
+resource "aws_lb_listener" "nlb-listener" {
     load_balancer_arn = aws_lb.app-nlb.arn
     count = length(var.nlb-listener-ports)
     port = var.nlb-listener-ports[count.index]
@@ -116,7 +116,7 @@ resource "aws_alb_listener" "nlb-listener" {
 }
 
 resource "aws_lb_listener_rule" "nlb-listener-rule" {
-  listener_arn = aws_alb_listener.nlb-listener.arn
+  listener_arn = aws_lb_listener.nlb-listener.arn
   priority = 100
 
   action {
