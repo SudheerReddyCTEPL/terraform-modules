@@ -1,20 +1,7 @@
 
-module "vpc" {
-  source = "../terraform-modules-vpc"
-
-
-}
-module "iam" {
-  source = "../terraform-modules-eks-iam-role"
-
-}
-module "cloudwatch" {
-  source = "../cloudwatch"
-}
-
 resource "aws_eks_cluster" "eks-cluster" {
   name = var.eks-cluster-name
-  role_arn = module.iam.cluster-role-arn
+  role_arn = data.aws_iam_role.eks-cluster-role.arn
   version = "1.27"
   enabled_cluster_log_types = [    # AWS EKS control plane logging
       "api",
@@ -26,12 +13,12 @@ resource "aws_eks_cluster" "eks-cluster" {
   
 
   vpc_config {
-    subnet_ids = [module.vpc.subnet-ids]   
+    subnet_ids = data.aws_subnets.subnet-ids.ids
     endpoint_private_access = true
     endpoint_public_access = true
     public_access_cidrs = ["0.0.0.0/0"]
   }
-  depends_on = [module.iam,module.cloudwatch] #[module.eks-iam-role.policy-dependency,module.cloudwatch-group-name.cloudwatch-log-group]
+  
 
   tags = merge(var.tags, {"Name" = var.eks-cluster-name})
 }

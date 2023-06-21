@@ -71,3 +71,18 @@ variable "disk-size" {
 variable "instance-types" {
   type = list(string)
 }
+variable "eks-cluster-role-name" {
+  type = string
+}
+variable "fargate-iam-role-name" {
+  type = string
+}
+variable "vpc-name" {
+  type = string
+}
+variable "eks-workernode-iam-role-name" {
+  type = string
+}
+variable "private_subnet_names" {
+  type = list(string)
+}

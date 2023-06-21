@@ -1,6 +1,3 @@
-module "eks-cluster" {
-  source = "../eks-cluster"
-}
 
 
 resource "aws_cloudwatch_log_group" "eks_control_plane_logs" {

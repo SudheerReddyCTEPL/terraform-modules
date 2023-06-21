@@ -1,12 +1,11 @@
-module "vpclogs-cloudwatch" {
-  source = "../cloudwatch"
-}
-module "vpcflowlogs-iam-role" {
-  source = "../terraform-modules-eks-iam-role"
-}
-module "s3" {
-  source = "../s3"
-}
+# module "cloudwatch" {
+#   source = "../cloudwatch"
+
+#   vpc-cloudwatch-group = var.vpc-cloudwatch-group
+#   vpc-flowlog-role = var.vpc-flowlog-role
+#   vpc-iam-role-policy = var.vpc-iam-role-policy
+  
+# }
 
 # create VPC
 resource "aws_vpc" "main" {
@@ -14,8 +13,7 @@ resource "aws_vpc" "main" {
   instance_tenancy = "default"
   enable_dns_hostnames = true
   enable_dns_support = true
-  tags = merge(var.tags,
-               var.vpc_tags)
+  tags = merge(var.tags, {"Name" = "${var.vpc-name}"})                     
 }
 # create internet gateway
  resource "aws_internet_gateway" "main" {
@@ -117,11 +115,14 @@ resource "aws_route_table_association" "private" {
 }
 
 resource "aws_flow_log" "vpc-log" {
-  iam_role_arn = module.vpcflowlogs-iam-role.vpcflowlog-iam-role-arn
-  log_destination = module.vpclogs-cloudwatch.vpc-cloudwatch-group-arn
+  iam_role_arn = data.aws_iam_role.vpc-flowlog.arn
+  #module.vpcflowlogs-iam-role.vpcflowlog-iam-role-arn
+  log_destination = data.aws_cloudwatch_log_group.vpc-cloudwatch-group.arn
+  #module.vpclogs-cloudwatch.vpc-cloudwatch-group-arn
   traffic_type = "ALL"
   vpc_id = aws_vpc.main.id
 }
+
 
 
 # resource "aws_subnet" "database" {

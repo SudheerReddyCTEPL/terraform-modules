@@ -10,8 +10,8 @@
 resource "aws_eks_node_group" "this" {
   cluster_name = aws_eks_cluster.eks-cluster.name
   node_group_name = var.node-group
-  node_role_arn = module.iam.workernode-iam-role
-  subnet_ids = module.vpc.private_subnet_ids
+  node_role_arn = data.aws_iam_role.worknode-role-arn.arn
+  subnet_ids = data.aws_subnets.private-subnets.ids
 
   scaling_config {
     desired_size = var.desired-size
@@ -30,7 +30,7 @@ resource "aws_eks_node_group" "this" {
 
   tags = merge(var.tags)
 
-  depends_on = [module.iam]
+  
   
   #[module.workernode-role.workernode-dependency,module.workernode-role.eks-cni-dependency,
   #module.workernode-role.ec2containerregistryreadonly-dependency]

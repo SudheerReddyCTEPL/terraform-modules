@@ -32,3 +32,13 @@ variable "tags" {
 variable "nlb-name" {
   type = string
 }
+variable "public_sg_name" {
+  type = string
+}
+variable "vpc-name" {
+  type = string
+}
+variable "public_subnet_names" {
+  type = list(string)
+}
+

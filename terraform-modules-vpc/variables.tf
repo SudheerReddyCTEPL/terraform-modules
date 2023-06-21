@@ -1,6 +1,8 @@
 variable "vpc_cidr" {
   type = string
 }
+
+
 variable "tags" {
   type = map   # required
 }
@@ -56,61 +58,17 @@ variable "private_route_table_name" {
   type = string
 }
 variable "project" {
-  ype = string
-}
-
-# variable "alb_name" {
-#   type = string
-# }
-# variable "internal" {
-#   type = bool  # value should be false
-# }
-# variable "lb_type" {
-#   type = string
-# }
-# variable "target_group_names" {
-#   type    = list(string)
-# }
-# variable "alb_listener_ports" {
-#   type    = list(number)
-# }
-# variable "nlb_listener_ports" {
-#   type = list(number)
-# }
-# variable "vpc_link_name" {
-#   type = string
-# }
-# variable "vpc_link_description" {
-#   type = string
-# }
-# variable "nlb_name" {
-#   type = string
-# }
-# variable "lb-type" {
-#   type = string
-# }
-# variable "target-group-names" {
-#   type = list(string)
-# }
-# variable "database_subnet_cidr" {
-#   type = list
-# }
-# variable "database_subnet_names" {
-#   type = list
-# }
-# variable "database_subnet_tags" {
-#   type = map
-#   default = {}
-# }
-# variable "vpc_endpoint_type" {
-#   type = string
-# }
-
-variable "aws_access_key"{
   type = string
-  default = "AKIA53VAMATPXDQQMJ4W"
 }
-variable "aws_secret_key"{
+variable "vpc-cloudwatch-group" {
   type = string
-  default = "aS7MJCDJfWE5lU8pml6WlysLjhzYUFMr6C/AVK0U"
+}
+variable "vpc-flowlog-role" {
+  type = string
+}
+variable "vpc-iam-role-policy" {
+  type = string
+}
+variable "vpc-name" {
+  type = string
 }

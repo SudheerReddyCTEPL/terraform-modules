@@ -1,13 +1,13 @@
-module "vpc" {
-  source = "../terraform-modules-vpc"
-  
-}
+# module "vpc" {
+#   source = "../terraform-modules-vpc"
+# }
+
 
 # security group for eks control plane
 resource "aws_security_group" "public_sg" {
   name =  var.public_sg_name
   description = var.public_sg_description
-  vpc_id = module.vpc.vpc_id
+  vpc_id = data.aws_vpc.existing_vpc_id.id
 
   tags = merge(var.tags,{"Name" = var.public_sg_name})
 }
@@ -29,7 +29,7 @@ resource "aws_security_group_rule" "public_outbound" {
   security_group_id = aws_security_group.public_sg.id
   type  = "egress"
   from_port  = 0
-  toto_port = 0
+  to_port = 0
   protocol = "-1" 
   cidr_blocks = ["0.0.0.0/0"]
   ipv6_cidr_blocks = ["::/0"]      
@@ -37,7 +37,7 @@ resource "aws_security_group_rule" "public_outbound" {
 
 resource "aws_security_group" "workernode_sg" {
   name = var.workernode_sg_name
-  vpc_id = module.vpc.vpc_id
+  vpc_id = data.aws_vpc.existing_vpc_id.id
   description = var.workernode_sg_description
 
   egress {          
@@ -64,7 +64,7 @@ resource "aws_security_group_rule" "workernodes_inbound" {
 
 resource "aws_security_group" "control_plane_sg" {
   name = var.control_plane_sg_name
-  vpc_id = module.vpc.vpc_id
+  vpc_id = data.aws_vpc.existing_vpc_id.id
   description = var.control_plane_sg_description
 
   egress {          

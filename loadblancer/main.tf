@@ -1,16 +1,9 @@
-module "sg" {
-  source = "../terraform-modules-security-group"
-}
-module "vpc" {
-  source = "../terraform-modules-vpc"
-}
-
 resource "aws_lb" "app_alb" {
   name = var.alb_name
   internal = var.internal
   load_balancer_type = var.lb_type[0]
-  security_groups = module.sg.public_sg_id
-  subnets = module.vpc.public_subnet_ids
+  security_groups = data.aws_security_groups.public-sg-id.ids
+  subnets = data.aws_subnets.public[*].ids
   #enable_deletion_protection = true
   #vpc_id = aws_vpc.main.id
 
@@ -28,7 +21,7 @@ resource "aws_lb_target_group" "targetgroup-alb" {
   name = var.target-group-names[count.index]
   port = var.alb-listener-ports[count.index]
   protocal = var.targetgroup-protocol
-  vpc_id = module.vpc.vpc_id
+  vpc_id = data.aws_vpc.existing_vpc_id.id
   target_type = var.target-type  #instance
 }
 
@@ -77,7 +70,7 @@ resource "aws_lb" "app-nlb" {
   name = var.nlb-name
   internal = var.internal
   load_balancer_type = var.lb_type[1]
-  subnets = module.vpc.public_subnet_ids
+  subnets = data.aws_subnets.public[*].ids
 
   #enable_deletion_protection = true
 }
@@ -95,13 +88,13 @@ resource "aws_lb_target_group" "targetgroup-nlb" {
   name = var.nlb-target-group-names[count.index]
   port = var.nlb-listener-ports[count.index]
   protocal = var.nlb-targetgroup-protocol
-  vpc_id = module.vpc.vpc_id
+  vpc_id = data.aws_vpc.existing_vpc_id.id
   target_type = var.target-type  #instance
 }
 
 
 
-resource "aws_lb_listener" "nlb-listener" {
+resource "aws_alb_listener" "nlb-listener" {
     load_balancer_arn = aws_lb.app-nlb.arn
     count = length(var.nlb-listener-ports)
     port = var.nlb-listener-ports[count.index]
@@ -116,7 +109,7 @@ resource "aws_lb_listener" "nlb-listener" {
 }
 
 resource "aws_lb_listener_rule" "nlb-listener-rule" {
-  listener_arn = aws_lb_listener.nlb-listener.arn
+  listener_arn = aws_alb_listener.nlb-listener.arn
   priority = 100
 
   action {

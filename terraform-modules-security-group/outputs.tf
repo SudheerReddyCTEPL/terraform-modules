@@ -7,3 +7,6 @@ output "workernode_sg_id" {
 output "control_plane_sg_id" {
   value = aws_security_group.control_plane_sg.id
 }
+output "vpc_id" {
+  value = data.aws_vpc.existing_vpc_id.id
+}

@@ -32,3 +32,6 @@ output "nodegroup-id" {
 output "eks-nodegroup-status" {
   value = aws_eks_node_group.this.status
 }
+output "vpc_id" {
+  value = data.aws_vpc.existing_vpc_id.id
+}

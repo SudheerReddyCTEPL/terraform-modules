@@ -3,19 +3,19 @@ resource "aws_iam_role" "eks-cluster-role" {
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
   
   
-  /*jsonencode(
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "eks.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-})*/
+#   /*jsonencode(
+# {
+#   "Version": "2012-10-17",
+#   "Statement": [
+#     {
+#       "Effect": "Allow",
+#       "Principal": {
+#         "Service": "eks.amazonaws.com"
+#       },
+#       "Action": "sts:AssumeRole"
+#     }
+#   ]
+# })*/
    tags = merge(var.tags,{"Name" = var.eks-cluster-role-name})
 }
 
@@ -54,9 +54,10 @@ data "aws_iam_policy" "fargate-iam-policy" {
   arn = "arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy"
 }
 
-resource "aws_iam_group_policy_attachment" "fargateprofile-policy" {
+resource "aws_iam_role_policy_attachment" "fargateprofile-policy" {
   policy_arn = local.fargateprofile-arn
   role = aws_iam_role.fargate-iam-role.name
+  
 }
 data "aws_iam_policy_document" "fargate-assume-role" {
   statement {
@@ -76,20 +77,20 @@ resource "aws_iam_role" "workernode" {
   name = var.eks-workernode-iam-role-name
   assume_role_policy = data.aws_iam_policy_document.workernode-assume_role.json
 
-  tags = merge(var.tags,{"Name" = var.workernode-iam-role-name})
+  tags = merge(var.tags,{"Name" = var.eks-workernode-iam-role-name})
 }
 
-resource "aws_iam_group_policy_attachment" "node_AmazonEKSWorkerNodePolicy" {
+resource "aws_iam_role_policy_attachment" "node_AmazonEKSWorkerNodePolicy" {
   policy_arn = local.eks-workerNodePolicy-arn
   role = aws_iam_role.workernode.name
 }
 
-resource "aws_iam_group_policy_attachment" "node_AmazonEKS_CNI_Policy" {
+resource "aws_iam_role_policy_attachment" "node_AmazonEKS_CNI_Policy" {
   policy_arn = local.eks-CNI_Policy-arn
   role = aws_iam_role.workernode.name
 }
 
-resource "aws_iam_group_policy_attachment" "node_AmazonEC2ContainerRegistryReadOnly" {
+resource "aws_iam_role_policy_attachment" "node_AmazonEC2ContainerRegistryReadOnly" {
   policy_arn = local.EC2ContainerRegistryReadOnly-arn
   role = aws_iam_role.workernode.name
 }
