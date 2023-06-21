@@ -1,3 +1,4 @@
+# EKS Cluster IAM Role
 resource "aws_iam_role" "eks-cluster-role" {
   name = var.eks-cluster-role-name
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
@@ -145,4 +146,18 @@ resource "aws_iam_role_policy" "vpc-logs-policy" {
   name = var.vpc-iam-role-policy
   role = aws_iam_role.vpcflowlog-role.id
   policy = data.aws_iam_policy_document.logs-policy-role.json
+}
+
+# CloudTrail IAM ROle
+
+data "aws_iam_policy_document" "cloudtrail-policy-document" {
+  statement {
+    sid    = "AWSCloudTrailAclCheck"
+    effect = "Allow"
+
+    principals {
+      type = "Service"
+      identifiers = ["cloudtrail.amazonaws.com"]
+    }
+  }
 }

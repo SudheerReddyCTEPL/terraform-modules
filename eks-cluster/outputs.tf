@@ -35,3 +35,6 @@ output "eks-nodegroup-status" {
 output "vpc_id" {
   value = data.aws_vpc.existing_vpc_id.id
 }
+output "eks-sg-id" {
+  value = data.aws_security_groups.eks-workernode-sg.id
+}

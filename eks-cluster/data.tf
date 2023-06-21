@@ -30,3 +30,10 @@ data "aws_subnets" "private-subnets" {
    }
 
 }
+
+data "aws_security_groups" "eks-workernode-sg" {
+  filter {
+    name = "group-name"
+    values = [var.workernode_sg_name]
+  }
+}

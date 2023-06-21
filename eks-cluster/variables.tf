@@ -86,3 +86,6 @@ variable "eks-workernode-iam-role-name" {
 variable "private_subnet_names" {
   type = list(string)
 }
+variable "workernode_sg_name" {
+  type = string
+}

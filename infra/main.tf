@@ -84,7 +84,9 @@ module "eks-cluster" {
   eks-workernode-iam-role-name = var.eks-workernode-iam-role-name
   private_subnet_names         = var.private_subnet_names
   eks-cluster-role-name        = var.eks-cluster-role-name
+  workernode_sg_name           = var.workernode_sg_name            
   depends_on                   = [module.iam]
+  
 }
 
 # module "lb" {

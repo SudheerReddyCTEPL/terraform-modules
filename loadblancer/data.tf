@@ -9,6 +9,10 @@ data "aws_security_groups" "public-sg-id" {
     name = "group-name"
     values = [ var.public_sg_name]
   }
+  # filter {
+  #   name = "vpc-id"
+  #   values = [data.aws_vpc.existing_vpc_id.id]
+  # }
 }
 data "aws_subnets" "public" {
   filter {
